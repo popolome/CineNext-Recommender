@@ -36,12 +36,6 @@ if 'toast_shown' not in st.session_state:
 def normalize(text):
   return re.sub(r'[^a-zA-Z0-9]', '', str(text)).lower()
 
-# This is the UI (User Interface) design
-st.title("CineNext: AI Movie Recommender 🍿")
-st.markdown("Discover movies using titles or just describe what you're looking for.")
-
-user_input = st.text_input("Search movie title or describe a vibe...", placeholder="e.g. Inception or 'A sad movie about robots")
-
 def run_recommendation():
   if user_input:
     with st.spinner('Thinking...'):
@@ -72,7 +66,11 @@ def run_recommendation():
     st.warning(f"Please enter something first!")
 
 # This is the search logic for the enter button
-user_input = st.text_input("Search movie title or describe a vibe...", placeholder="e.g. Inception")
+user_input = st.text_input("Search movie title or describe a vibe...", placeholder="e.g. Inception or 'A sad movie about robots")
+
+# This is the UI (User Interface) design
+st.title("CineNext: AI Movie Recommender 🍿")
+st.markdown("Discover movies using titles or just describe what you're looking for.")
 
 # This only runs if button or enter is pressed
 if st.button('Get Recommendations') or user_input:
