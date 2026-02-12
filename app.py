@@ -54,6 +54,10 @@ if 'toast_shown' not in st.session_state:
   st.toast("CineNext Engine is Ready!", icon="🍿")
   st.session_state['toast_shown'] = True
 
+# This will initialize the state
+if 'display_limit' not in st.session_state:
+  st.session_state.display_limit = 10
+
 # This will normalize the logic with re
 def normalize(text):
   return re.sub(r'[^a-zA-Z0-9]', '', str(text)).lower()
@@ -89,7 +93,7 @@ def run_recommendation():
       # This will query the ChromaDB
       results = collection.query(
         query_texts=[query_text],
-        n_results=10
+        n_results=st.session_state.display_limit
       )
       
       st.divider()
@@ -108,6 +112,11 @@ def run_recommendation():
             st.image(poster_url, use_container_width=True)
             # This displays the title in a nice clean font
             st.caption(f"**{res['title']}**")
+
+      if len(movies_found) >= st.session_state.display_limit and st.session_state.display_limit < 50:
+        if st.button("Show More Results ⬇️"):
+          st.session_state.display_limit += 10
+          st.rerun()
       
   else:
     st.warning(f"Please enter something first!")
@@ -119,9 +128,10 @@ st.markdown("Discover movies using titles or just describe what you're looking f
 # This is the search logic for the enter button
 user_input = st.text_input("Search movie title or describe a vibe...", placeholder="e.g. Inception or 'A sad movie about robots")
 
-# This only runs if button or enter is pressed
+# This only runs if button or enter is pressed, and resets limit for every new search
 if st.button('Get Recommendations') or user_input:
   if user_input.strip() != "":
+    st.session_state.display_limit = 10
     run_recommendation()
 
 # This is the footer
