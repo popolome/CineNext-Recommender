@@ -4,6 +4,7 @@ import chromadb
 import pandas as pd
 import re
 import pickle
+import requests
 
 # This is the page config
 st.set_page_config(page_title="CineNext AI", page_icon='🍿', layout='centered')
@@ -21,7 +22,7 @@ def init_db():
     with st.spinner("Building AI database..."):
       collection.add(
         documents=movies['tags'].tolist(),
-        metadatas=[{'title': t} for t in movies['title'].tolist()],
+        metadatas=[{'title': t, 'id': i} for t, i in zip(movies['titile'], movies['id']),
         ids=[str(i) for i in movies['id'].tolist()]
       )
   return collection, movies
@@ -35,6 +36,18 @@ if 'toast_shown' not in st.session_state:
 # This will normalize the logic with re
 def normalize(text):
   return re.sub(r'[^a-zA-Z0-9]', '', str(text)).lower()
+
+def fetch_poster(movie_id):
+  # This keeps the API key hidden
+  api_key = st.secrets["TMDB_API_KEY"]
+  url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-us"
+  try:
+    data = requests.get(url, timeout=5).json()
+    poster_path = data['poster_path']
+    full_path = "https://image.tmdb.org/t/p/w500" + poster_path
+    return full_path
+  except:
+    return "https://via.placeholder.com/500x750?text=No+Poster+Found"
 
 def run_recommendation():
   if user_input:
@@ -57,11 +70,20 @@ def run_recommendation():
         query_texts=[query_text],
         n_results=5
       )
-
-      # This will display the results
+      
       st.divider()
-      for res in results['metadatas'][0]:
-        st.subheader(f"🎬 {res['title']}")
+
+      # This will display the results in 5 columns
+      cols = st.columns(5)
+
+      # This will use the metadata id to get poster
+      for idx, res in enumerate(results['metadatas'][0]):
+        with cols[idx]:
+          poster_url = fetch_poster(res['id'])
+          st.image(poster_url, use_container_width=True)
+          # This displays the title in a nice clean font
+          st.markdown(f"**{res['title']}**")
+      
   else:
     st.warning(f"Please enter something first!")
 
@@ -79,4 +101,4 @@ if st.button('Get Recommendations') or user_input:
 
 # This is the footer
 st.markdown("---")
-st.caption("Powered by ChromaDB & Sentence-Transformers")
+st.caption("Powered by ChromaDB & Sentence-Transformers. Data provided by TMDB.")
