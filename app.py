@@ -75,7 +75,7 @@ def run_recommendation():
 user_input = st.text_input("Search movie title or describe a vibe...", placeholder="e.g. Inception")
 
 # This only runs if button or enter is pressed
-if st.button('Get Recommendations') or user_input():
+if st.button('Get Recommendations') or user_input:
   if user_input.strip() != "":
     run_recommendation()
 
