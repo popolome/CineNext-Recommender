@@ -27,7 +27,7 @@ def init_db():
   
   # This will batch add to avoid memory spike
   collection.add(
-    documents=movies['tag'].tolist(),
+    documents=movies['tags'].tolist(),
     metadatas=[{'title': t} for t in movies['title'].tolist()],
     ids=[str(i) for i in movies['id'].tolist()]
   )
