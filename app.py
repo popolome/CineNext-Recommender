@@ -52,11 +52,11 @@ if st.button('Get Recommendations'):
       if not match.empty:
         # This will search using its tags to if title is found
         query_text = match['tags'].values[0]
-        st.write(f"### Because you searched **{match['title'].values[0]}**:")
+        st.write(f"### Recommendations for you, starting with **{match['title'].values[0]}**:")
       else:
         # This will search using the raw description if title is not found
         query_text = user_input
-        st.write(f"### Movie not found. However, here are similar movies recommended for you: '{user_input}'")
+        st.write(f"### We couldn't find that movie, but you might enjoy these similar titles: '{user_input}'")
 
       # This will query the ChromaDB
       results = collection.query(
