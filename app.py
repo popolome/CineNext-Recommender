@@ -27,7 +27,10 @@ def init_db():
   return collection, movies
 
 collection, movies = init_db()
-st.toast("CineNext Engine is Ready!", icon="🍿")
+# This will run st.toast once
+if 'toast_shown' not in st.session_state:
+  st.toast("CineNext Engine is Ready!", icon="🍿")
+  st.session_state['toast_shown'] == True
 
 # This will normalize the logic with re
 def normalize(text):
@@ -49,11 +52,11 @@ if st.button('Get Recommendations'):
       if not match.empty:
         # This will search using its tags to if title is found
         query_text = match['tags'].values[0]
-        st.write(f"### Because you watched **{match['title'].values[0]}**:")
+        st.write(f"### Because you searched **{match['title'].values[0]}**:")
       else:
         # This will search using the raw description if title is not found
         query_text = user_input
-        st.write(f"### Movies matching the vibe: '{user_input}'")
+        st.write(f"### Movie not found. However, here are similar movies recommended for you: '{user_input}'")
 
       # This will query the ChromaDB
       results = collection.query(
