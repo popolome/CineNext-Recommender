@@ -65,12 +65,12 @@ def run_recommendation():
   else:
     st.warning(f"Please enter something first!")
 
-# This is the search logic for the enter button
-user_input = st.text_input("Search movie title or describe a vibe...", placeholder="e.g. Inception or 'A sad movie about robots")
-
 # This is the UI (User Interface) design
 st.title("CineNext: AI Movie Recommender 🍿")
 st.markdown("Discover movies using titles or just describe what you're looking for.")
+
+# This is the search logic for the enter button
+user_input = st.text_input("Search movie title or describe a vibe...", placeholder="e.g. Inception or 'A sad movie about robots")
 
 # This only runs if button or enter is pressed
 if st.button('Get Recommendations') or user_input:
