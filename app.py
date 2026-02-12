@@ -42,7 +42,7 @@ st.markdown("Discover movies using titles or just describe what you're looking f
 
 user_input = st.text_input("Search movie title or describe a vibe...", placeholder="e.g. Inception or 'A sad movie about robots")
 
-if st.button('Get Recommendations'):
+def run_recommendation():
   if user_input:
     with st.spinner('Thinking...'):
       # This will check if the input matches a title
@@ -70,6 +70,14 @@ if st.button('Get Recommendations'):
         st.subheader(f"🎬 {res['title']}")
   else:
     st.warning(f"Please enter something first!")
+
+# This is the search logic for the enter button
+user_input = st.text_input("Search movie title or describe a vibe...", placeholder="e.g. Inception")
+
+# This only runs if button or enter is pressed
+if st.button('Get Recommendations') or user_input():
+  if user_input.strip() != "":
+    run_recommendation()
 
 # This is the footer
 st.markdown("---")
