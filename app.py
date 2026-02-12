@@ -78,7 +78,7 @@ def run_recommendation():
       # This will loop thru the movies in chunks of 5
       for i in range(0, len(movies_found), 5):
         cols = st.columns(5)
-        batch = movies_found[i + i+5]
+        batch = movies_found[i : i+5]
 
       # This will use the metadata id to get poster
       for idx, res in enumerate(batch):
