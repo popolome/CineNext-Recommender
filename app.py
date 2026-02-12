@@ -68,7 +68,7 @@ def run_recommendation():
       # This will query the ChromaDB
       results = collection.query(
         query_texts=[query_text],
-        n_results=5
+        n_results=6
       )
       
       st.divider()
