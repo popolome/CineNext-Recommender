@@ -52,7 +52,7 @@ if st.button('Get Recommendations'):
       if not match.empty:
         # This will search using its tags to if title is found
         query_text = match['tags'].values[0]
-        st.write(f"### Recommendations for you, starting with **{match['title'].values[0]}**:")
+        st.write(f"### Keeping the **{match['title'].values[0]}** vibe going with these picks:")
       else:
         # This will search using the raw description if title is not found
         query_text = user_input
