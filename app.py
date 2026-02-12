@@ -68,13 +68,13 @@ def run_recommendation():
       # This will query the ChromaDB
       results = collection.query(
         query_texts=[query_text],
-        n_results=6
+        n_results=10
       )
       
       st.divider()
 
       # This will display the results in 5 columns
-      cols = st.columns(5)
+      cols = st.columns(10)
 
       # This will use the metadata id to get poster
       for idx, res in enumerate(results['metadatas'][0]):
