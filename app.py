@@ -30,7 +30,7 @@ collection, movies = init_db()
 # This will run st.toast once
 if 'toast_shown' not in st.session_state:
   st.toast("CineNext Engine is Ready!", icon="🍿")
-  st.session_state['toast_shown'] == True
+  st.session_state['toast_shown'] = True
 
 # This will normalize the logic with re
 def normalize(text):
