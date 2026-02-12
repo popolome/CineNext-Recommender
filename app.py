@@ -12,31 +12,22 @@ st.set_page_config(page_title="CineNext AI", page_icon='🍿', layout='centered'
 @st.cache_resource
 def init_db():
   # This will connect to the chroma folder
-  client = chromadb.PersistentClient(path="./movie_db")
-  
   # This will try to get the collection and check if its empty, rebuilts it if empty
-  try:
-    collection = client.get_collection(name="movies")
-    if collection.count() == 0:
-      raise ValueError("Empty collection")
-  except:
-    st.info("Building database for the first time... this may take a minute.")
-    collection = client.get_or_create_collection(name="movies")
-  # This will load the movie titles for the search logic
+  client = chromadb.PersistentClient(path="./movie_db")
+  collection = client.get_or_create_collection(name="movies")
   movies = pickle.load(open("movie_list.pkl", 'rb'))
-  
-  # This will batch add to avoid memory spike
-  collection.add(
-    documents=movies['tags'].tolist(),
-    metadatas=[{'title': t} for t in movies['title'].tolist()],
-    ids=[str(i) for i in movies['id'].tolist()]
-  )
-  st.success("Database built successfully!")
 
-  movies = pickle.load(open("movie_list.pkl", 'rb'))
+  if collection.count() == 0:
+    with st.spinner("Building AI database..."):
+      collection.add(
+        documents=movies['tags'].tolist(),
+        metadatas=[{'title': t} for t in movies['title'].tolist()],
+        ids=[str(i) for i in movies['id'].tolist()]
+      )
   return collection, movies
 
 collection, movies = init_db()
+st.toast("CineNext Engine is Ready!", icon="🍿")
 
 # This will normalize the logic with re
 def normalize(text):
