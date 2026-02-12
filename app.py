@@ -7,7 +7,7 @@ import pickle
 import requests
 
 # This is the page config
-st.set_page_config(page_title="CineNext AI", page_icon='🍿', layout='centered')
+st.set_page_config(page_title="CineNext AI", page_icon='🍿', layout='wide')
 
 # This will load the data fast by using cache
 @st.cache_resource
@@ -81,12 +81,12 @@ def run_recommendation():
         batch = movies_found[i : i+5]
 
       # This will use the metadata id to get poster
-      for idx, res in enumerate(batch):
-        with cols[idx]:
-          poster_url = fetch_poster(res['id'])
-          st.image(poster_url, use_container_width=True)
-          # This displays the title in a nice clean font
-          st.caption(f"**{res['title']}**")
+        for idx, res in enumerate(batch):
+          with cols[idx]:
+            poster_url = fetch_poster(res['id'])
+            st.image(poster_url, use_container_width=True)
+            # This displays the title in a nice clean font
+            st.caption(f"**{res['title']}**")
       
   else:
     st.warning(f"Please enter something first!")
