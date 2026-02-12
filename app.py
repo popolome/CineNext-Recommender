@@ -22,7 +22,7 @@ def init_db():
     with st.spinner("Building AI database..."):
       collection.add(
         documents=movies['tags'].tolist(),
-        metadatas=[{'title': t, 'id': i} for t, i in zip(movies['titile'], movies['id']),
+        metadatas=[{'title': t, 'id': i} for t, i in zip(movies['title'], movies['id'])],
         ids=[str(i) for i in movies['id'].tolist()]
       )
   return collection, movies
