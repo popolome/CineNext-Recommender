@@ -15,7 +15,7 @@ def init_db():
   # This will connect to the chroma folder
   # This will try to get the collection and check if its empty, rebuilts it if empty
   client = chromadb.PersistentClient(path="./movie_db")
-  collection = client.get_or_create_collection(name="movies")
+  collection = client.get_or_create_collection(name="movies_v2")
   movies = pickle.load(open("movie_list.pkl", 'rb'))
 
   if collection.count() == 0:
@@ -102,3 +102,4 @@ if st.button('Get Recommendations') or user_input:
 # This is the footer
 st.markdown("---")
 st.caption("Powered by ChromaDB & Sentence-Transformers. Data provided by TMDB.")
+st.caption("CineNext Recommender v1.0")
