@@ -56,7 +56,7 @@ if st.button('Get Recommendations'):
       else:
         # This will search using the raw description if title is not found
         query_text = user_input
-        st.write(f"### We couldn't find that movie, but you might enjoy these similar titles: '{user_input}'")
+        st.write(f"### We couldn't find that movie, but you might enjoy these similar titles:")
 
       # This will query the ChromaDB
       results = collection.query(
