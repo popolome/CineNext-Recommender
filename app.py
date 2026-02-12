@@ -9,6 +9,27 @@ import requests
 # This is the page config
 st.set_page_config(page_title="CineNext AI", page_icon='🍿', layout='wide')
 
+# This is the CSS
+st.markdown("""
+  <style>
+  /* This will ensure posters have rounded corners and a shadow */
+  .stImage img {
+    border_radius: 10px;
+    transition: transform .2s; /* Animation! */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+  }
+  /* This will zoom in slightly when hovering */
+  .stImage img:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+  }
+  /* This will darken the background for cinematic feel */
+  .stApp {
+    background-color: #0e1117;
+  }
+  </style>
+""", unsafe_allow_html=True)
+
 # This will load the data fast by using cache
 @st.cache_resource
 def init_db():
