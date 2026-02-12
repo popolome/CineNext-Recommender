@@ -73,16 +73,20 @@ def run_recommendation():
       
       st.divider()
 
-      # This will display the results in 5 columns
-      cols = st.columns(10)
+      movies_found = results['metadatas'][0]
+
+      # This will loop thru the movies in chunks of 5
+      for i in range(0, len(movies_found), 5):
+        cols = st.columns(5)
+        batch = movies_found[i + i+5]
 
       # This will use the metadata id to get poster
-      for idx, res in enumerate(results['metadatas'][0]):
+      for idx, res in enumerate(batch):
         with cols[idx]:
           poster_url = fetch_poster(res['id'])
           st.image(poster_url, use_container_width=True)
           # This displays the title in a nice clean font
-          st.markdown(f"**{res['title']}**")
+          st.caption(f"**{res['title']}**")
       
   else:
     st.warning(f"Please enter something first!")
