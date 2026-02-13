@@ -119,7 +119,7 @@ def run_recommendation():
         for idx, res in enumerate(batch):
           with cols[idx]:
             # This will fetch all details at once, show the poster, and add the interactive popover
-            details = fetch_details(res['id'])
+            details = fetch_poster(res['id'])
             st.image(details['poster'], use_container_width=True)
             # This displays the title in a nice clean font
             with st.popover(f"📖 Details"):
