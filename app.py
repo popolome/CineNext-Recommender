@@ -72,11 +72,17 @@ def fetch_poster(movie_id):
   url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-us"
   try:
     data = requests.get(url, timeout=5).json()
-    poster_path = data['poster_path']
-    full_path = "https://image.tmdb.org/t/p/w500" + poster_path
-    return full_path
+    return {
+      "poster": "https://image.tmdb.org/t/p/w500" + data.get('poster_path', ''),
+      "overview": data.get('overview', 'No description available.'),
+      "rating": round(data.get('vote_average', 0), 1)
+    }
   except:
-    return "https://via.placeholder.com/500x750?text=No+Poster+Found"
+    return {
+      "poster": "https://via.placeholder.com/500x750?text=No+Poster",
+      "overview": "Information unavailable.",
+      "rating": "N/A"
+    }
 
 def run_recommendation():
   if user_input:
@@ -112,10 +118,14 @@ def run_recommendation():
       # This will use the metadata id to get poster
         for idx, res in enumerate(batch):
           with cols[idx]:
-            poster_url = fetch_poster(res['id'])
-            st.image(poster_url, use_container_width=True)
+            # This will fetch all details at once, show the poster, and add the interactive popover
+            details = fetch_details(res['id'])
+            st.image(details['poster'], use_container_width=True)
             # This displays the title in a nice clean font
-            st.caption(f"**{res['title']}**")
+            with st.popover(f"📖 Details"):
+              st.write(f"### {res['title']}")
+              st.write(f"⭐ **Rating:** {details['rating']}/10")
+              st.write(details['overview'])
 
       if len(movies_found) >= st.session_state.display_limit and st.session_state.display_limit < 50:
         if st.button("Show More Results ⬇️", key="show_more_btn"):
