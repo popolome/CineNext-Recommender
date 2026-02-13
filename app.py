@@ -66,7 +66,7 @@ if 'search_active' not in st.session_state:
 def normalize(text):
   return re.sub(r'[^a-zA-Z0-9]', '', str(text)).lower()
 
-def fetch_poster(movie_id):
+def fetch_details(movie_id):
   # This keeps the API key hidden
   api_key = st.secrets["TMDB_API_KEY"]
   url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-us"
@@ -119,7 +119,7 @@ def run_recommendation():
         for idx, res in enumerate(batch):
           with cols[idx]:
             # This will fetch all details at once, show the poster, and add the interactive popover
-            details = fetch_poster(res['id'])
+            details = fetch_details(res['id'])
             st.image(details['poster'], use_container_width=True)
             # This displays the title in a nice clean font
             with st.popover(f"📖 Details"):
