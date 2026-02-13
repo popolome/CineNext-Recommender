@@ -14,7 +14,7 @@ st.markdown("""
   <style>
   /* This will ensure posters have rounded corners and a shadow */
   .stImage img {
-    border_radius: 10px;
+    border-radius: 10px;
     transition: transform .2s; /* Animation! */
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
   }
@@ -57,6 +57,10 @@ if 'toast_shown' not in st.session_state:
 # This will initialize the state
 if 'display_limit' not in st.session_state:
   st.session_state.display_limit = 10
+
+# This will lock the active search results
+if 'search_active' not in st.session_state:
+  st.session_state.search_active = False
 
 # This will normalize the logic with re
 def normalize(text):
@@ -114,7 +118,7 @@ def run_recommendation():
             st.caption(f"**{res['title']}**")
 
       if len(movies_found) >= st.session_state.display_limit and st.session_state.display_limit < 50:
-        if st.button("Show More Results ⬇️"):
+        if st.button("Show More Results ⬇️", key="show_more_btn"):
           st.session_state.display_limit += 10
           st.rerun()
       
@@ -128,11 +132,21 @@ st.markdown("Discover movies using titles or just describe what you're looking f
 # This is the search logic for the enter button
 user_input = st.text_input("Search movie title or describe a vibe...", placeholder="e.g. Inception or 'A sad movie about robots")
 
+if 'last_query' not in st.session_state:
+  st.session_state.last_query = ""
+
 # This only runs if button or enter is pressed, and resets limit for every new search
-if st.button('Get Recommendations') or user_input:
+if st.button('Get Recommendations') or (user_input != st.session_state.last_query and user_input != ""):
   if user_input.strip() != "":
+    st.session_state.search_active = True
     st.session_state.display_limit = 10
-    run_recommendation()
+    st.session_state.last_query = user_input
+  else:
+    st.warning("Please enter something first!")
+
+# This is the persistent view
+if st.session_state.search_active:
+  run_recommendation()
 
 # This is the footer
 st.markdown("---")
