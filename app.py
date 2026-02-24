@@ -12,32 +12,32 @@ st.set_page_config(page_title="CineNext AI", page_icon='🍿', layout='wide')
 # This is the CSS
 st.markdown("""
   <style>
-  .stButton button {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: none;
-    font-size: 12px;
-    border-radius: 5px;
-  }
-  /* This will make button color to be red */
-  .stButton button:hover {
-    background-color: #e50914;
-    color: white;
-  }
-  /* This will ensure posters have rounded corners and a shadow */
-  .stImage img {
-    border-radius: 10px;
-    transition: transform .2s; /* Animation! */
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
-  }
-  /* This will zoom in slightly when hovering */
-  .stImage img:hover {
-    transform: scale(1.05);
-    cursor: pointer;
-  }
-  /* This will darken the background for cinematic feel */
-  .stApp {
-    background-color: #0e1117;
+ /* This is the Cinematic Background */
+ .stApp {
+   background-color: #0e1117;
+ }
+ /* This will re-style the default button's looks */
+ div[data-testid="stButton"] > button {
+   border: none;
+   padding: 0;
+   background-color: transparent;
+   border-radius: 10px;
+   transition: transform 0.3s ease-in-out;
+   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+   overflow: hidden;
+   display: block;
+   width: 100%;
+ }
+ /* This is the hover effect with zoom, cursor becomes pointer */
+ div[data-testid="stButton"] > button:hover {
+   transform: scale(1.05);
+   background-color: transparent;
+   border: 2px solid #e50914;
+   cursor: pointer;
+ }
+  /* This hides the button */
+  div[data-testid="stButton"] > button p {
+    display: none; 
   }
   </style>
 """, unsafe_allow_html=True)
@@ -147,12 +147,25 @@ def run_recommendation():
             # This will fetch all details at once, show the poster, and add the interactive popover
             details = fetch_details(res['id'])
 
-            # This will show the image once
-            st.image(details['poster'], use_container_width=True)
+            st.markdown(f"""
+              <style>
+              button[title{res['id']}] {{
+                background-image: url('{details['poster']}');
+                background-size: cover;
+                background-position: center;
+                height: 350px;
+                border-radius: 10px;
+                border: none;
+              }}
+              </style>
+            """, unsafe_allow_html=True)
 
             # This button will mimic clicking the poster
-            if st.button(f"🔍 Info: {res['title']}", key=f"btn_{res['id']}", use_container_width=True):
+            if st.button(f"🔍 Info: {res['title']}", key=f"btn_{res['id']}", help=str(res['id']),use_container_width=True):
               show_details(res['id'], res['title'])
+
+            # This will show the title below the poster
+            st.caption(f"**{res['title']}**")
 
       if len(movies_found) >= st.session_state.display_limit and st.session_state.display_limit < 50:
         st.divider()
