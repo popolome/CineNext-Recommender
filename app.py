@@ -156,6 +156,7 @@ def run_recommendation():
                 background-size: cover;
                 background-position: center;
                 height: 350px;
+                width: 100% !important;
                 border-radius: 10px;
                 border: 2px solid transparent;
                 box-shadow: 0 4px 10px rgba(0,0,0,0.4);
@@ -164,7 +165,7 @@ def run_recommendation():
 
               /* This is the hover state */
               div.element-container:has(#movie_{res['id']}) + div.element-container button:hover {{
-                transform: scale(0.5);
+                transform: scale(1.05);
                 border-color: #e50914;
                 z-index: 10;
               }}
@@ -172,7 +173,7 @@ def run_recommendation():
             """, unsafe_allow_html=True)
 
             # This button will mimic clicking the poster
-            if st.button(" ", key=f"btn_{res['id']}", help=str(res['id']), use_container_width=True):
+            if st.button(" ", key=f"btn_{res['id']}", use_container_width=True):
               show_details(res['id'], res['title'])
 
             # This will show the title below the poster
