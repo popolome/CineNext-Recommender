@@ -84,21 +84,71 @@ def fetch_details(movie_id):
   url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-us"
   try:
     data = requests.get(url, timeout=5).json()
+
+    # This will format the year
+    release_year = data.get('release_date', '')
+    year = release_date.split('-')[0] if release_date else 'N/A'
+
+    # This will format the runtime (e.g., 125 -> 2h 5m)
+    runtime = data.get('runtime', 0)
+    runtime_str = f"{runtime // 60}hr {runtime % 60}mins" if runtime else 'N/A'
+
+    # This will extract up to 3 genres
+    genres = [g['name'] for g in data.get('genres', [])][:3]
+
+    # This will get the wide back-drop image, else use a poster
+    backdrop_path = data.get('backdrop_path')
+    backdrop = f"https://image.tmdb.org/t/p/w1280{backdrop_path}" if backdrop_path else "https://image.tmdb.org/t/p/w500" + data.get('poster_path', '')
+
     return {
       "poster": "https://image.tmdb.org/t/p/w500" + data.get('poster_path', ''),
+      "backdrop": backdrop,
       "overview": data.get('overview', 'No description available.'),
-      "rating": round(data.get('vote_average', 0), 1)
+      "rating": round(data.get('vote_average', 0), 1),
+      "year": year,
+      "runtime": runtime_str,
+      "genres": genres
     }
-  except:
-    return {
-      "poster": "https://via.placeholder.com/500x750?text=No+Poster",
-      "overview": "Information unavailable.",
-      "rating": "N/A"
-    }
+    except:
+      return {
+        "poster": "https://via.placeholder.com/500x750?text=No+Poster",
+        "backdrop": "https://via.placeholder.com/1280x720?text=No+Image",
+        "overview": "Information unavailable.",
+        "rating": "N/A",
+        "year": "N/A",
+        "runtime": "N/A",
+        "genres": []
+      }
 
-@st.dialog("Movie Details")
+@st.dialog("")
 def show_details(movie_id, title):
   details = fetch_details(movie_id)
+
+  # This will loop through the genres to build the grey badges dynamically
+  genres_html = "".join([f"<span class='badge'>{g}</span>" for g in details['genres']])
+
+  st.markdown(f"""
+    <style>
+    /* This will pull the banner image up closer to the close button */
+    div[data-testid="stDialog"] div[data-testid=""stVerticalBlock] > div:first-child {{
+      margin-top: -1.5rem;
+    }}
+
+    .hero-banner {{
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }}
+
+    .hero-image {{
+      height: 350px;
+      background-image: ('{details['backdrop']}');
+      background-size: cover;
+      background-position: center top;
+    }}
+    </style> /* CONTINUE FROM HERE */
+  """)
 
   col1, col2 = st.columns([1, 2])
   with col1:
