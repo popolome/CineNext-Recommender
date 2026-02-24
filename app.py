@@ -148,8 +148,10 @@ def run_recommendation():
             details = fetch_details(res['id'])
 
             st.markdown(f"""
+              <div id="movie_{res['id']}"></div>
               <style>
-              button[title={res['id']}] {{
+              /* This finds the wrapper containing the anchor, then targets the next button in the next wrapper */
+              div.element-container:has(#movie_{res['id']}) + div.element-container button {{
                 background-image: url('{details['poster']}');
                 background-size: cover;
                 background-position: center;
@@ -157,9 +159,6 @@ def run_recommendation():
                 border-radius: 10px;
                 border: none;
                 box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-              }}
-              button[title={res['id']}] {{
-                display: none !important;
               }}
               </style>
             """, unsafe_allow_html=True)
