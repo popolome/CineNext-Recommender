@@ -12,6 +12,18 @@ st.set_page_config(page_title="CineNext AI", page_icon='🍿', layout='wide')
 # This is the CSS
 st.markdown("""
   <style>
+  .stButton button {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    font-size: 12px;
+    border-radius: 5px;
+  }
+  /* This will make button color to be red */
+  .stButton button:hover {
+    background-color: #e50914;
+    color: white;
+  }
   /* This will ensure posters have rounded corners and a shadow */
   .stImage img {
     border-radius: 10px;
@@ -84,6 +96,20 @@ def fetch_details(movie_id):
       "rating": "N/A"
     }
 
+@st.dialog("Movie Details")
+def show_details(movie_id, title):
+  details = fetch_details(movie_id)
+
+  col1, col2 = st.columns([1, 2])
+  with col1:
+    st.image(details['poster'], use_container_width=True)
+  with col2:
+    st.write(f"### {title}")
+    st.write(f"⭐ **Rating:** {details['ratings']}/10")
+    st.write(f"📅 **ID:** {movie_id}")
+    st.write("---")
+    st.write(details['overview'])
+
 def run_recommendation():
   if user_input:
     with st.spinner('Thinking...'):
@@ -120,15 +146,17 @@ def run_recommendation():
           with cols[idx]:
             # This will fetch all details at once, show the poster, and add the interactive popover
             details = fetch_details(res['id'])
+
+            # This will show the image once
             st.image(details['poster'], use_container_width=True)
-            # This displays the title in a nice clean font
-            with st.popover(f"📖 Details"):
-              st.write(f"### {res['title']}")
-              st.write(f"⭐ **Rating:** {details['rating']}/10")
-              st.write(details['overview'])
+
+            # This button will mimic clicking the poster
+            if st.button(f"🔍 Info: {res['title']}", key=f"btn_{res['id']}", use_container_width=True):
+              show_details(res['id'], res['title'])
 
       if len(movies_found) >= st.session_state.display_limit and st.session_state.display_limit < 50:
-        if st.button("Show More Results ⬇️", key="show_more_btn"):
+        st.divider()
+        if st.button("Show More Results ⬇️", key="show_more_btn", use_container_width=True):
           st.session_state.display_limit += 10
           st.rerun()
       
