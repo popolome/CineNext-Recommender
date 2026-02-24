@@ -105,7 +105,7 @@ def show_details(movie_id, title):
     st.image(details['poster'], use_container_width=True)
   with col2:
     st.write(f"### {title}")
-    st.write(f"⭐ **Rating:** {details['ratings']}/10")
+    st.write(f"⭐ **Rating:** {details['rating']}/10")
     st.write(f"📅 **ID:** {movie_id}")
     st.write("---")
     st.write(details['overview'])
