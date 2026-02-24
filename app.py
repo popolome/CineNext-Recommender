@@ -157,8 +157,16 @@ def run_recommendation():
                 background-position: center;
                 height: 350px;
                 border-radius: 10px;
-                border: none;
+                border: 2px solid transparent;
                 box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+                transition: transform 0.3s ease-in-out, border-color 0.3s ease-in-out;
+              }}
+
+              /* This is the hover state */
+              div.element-container:has(#movie_{res['id']}) + div.element-container button:hover {{
+                transform: scale(0.5);
+                border-color: #e50914;
+                z-index: 10;
               }}
               </style>
             """, unsafe_allow_html=True)
