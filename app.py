@@ -120,7 +120,7 @@ def fetch_details(movie_id):
       "genres": []
     }
 
-@st.dialog("")
+@st.dialog(" ")
 def show_details(movie_id, title):
   details = fetch_details(movie_id)
 
