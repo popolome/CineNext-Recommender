@@ -55,7 +55,7 @@ if 'search_active' not in st.session_state:
 def normalize(text):
   return re.sub(r'[^a-zA-Z0-9]', '', str(text)).lower()
 
-@st.cache_data(ttl=86400)
+#@st.cache_data(ttl=86400)
 def fetch_details(movie_id):
   # This keeps the API key hidden
   api_key = st.secrets["TMDB_API_KEY"]
