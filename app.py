@@ -237,8 +237,8 @@ def show_details(movie_id, title):
 
   # This will add the Netflix-liked button
   if st.button("Get started ▶"):
-    st.toast(f"Starting {title}...", icon="🎬")
     st.toast(f"This is a test, no video will appear.")
+    st.toast(f"Starting {title}...", icon="🎬")
 
 def run_recommendation():
   if user_input:
