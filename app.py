@@ -59,7 +59,7 @@ def normalize(text):
 def fetch_details(movie_id):
   # This keeps the API key hidden
   api_key = st.secrets["TMDB_API_KEY"]
-  url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-us"
+  url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-us&append_to_response=videos"
   try:
     data = requests.get(url, timeout=5).json()
 
@@ -78,6 +78,14 @@ def fetch_details(movie_id):
     backdrop_path = data.get('backdrop_path')
     backdrop = f"https://image.tmdb.org/t/p/w1280{backdrop_path}" if backdrop_path else "https://image.tmdb.org/t/p/w500" + data.get('poster_path', '')
 
+    # This will loop and find trailers from Youtube and stop once it found it
+    trailer_key = None
+    videos = data.get('videos', {}).get('results', [])
+    for vid in videos:
+      if vid.get('site') == 'Youtube' and vid.get('type') == 'Trailer':
+        trailer_key = vid.get('key')
+        break
+    
     return {
       "poster": "https://image.tmdb.org/t/p/w500" + data.get('poster_path', ''),
       "backdrop": backdrop,
@@ -211,6 +219,9 @@ def show_details(movie_id, title):
       {details['overview']}
     </div>
   """, unsafe_allow_html=True)
+
+  if details['trailer_key']:
+    st.videos(f"https://www.youtube.com/watch?v={details['trailer_key']}")
 
   # This will add the Netflix-liked button
   if st.button("Get started ▶"):
