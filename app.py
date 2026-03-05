@@ -225,7 +225,7 @@ def show_details(movie_id, title):
     st.video(f"https://www.youtube.com/watch?v={trailer}")
 
   # This will add the Netflix-liked button
-  if st.button("Get started ▶"):
+  if st.button("Play Movie ▶"):
     st.toast(f"This is a test, no video will appear.")
     st.toast(f"Starting {title}...", icon="🎬")
 
