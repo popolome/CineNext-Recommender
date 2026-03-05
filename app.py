@@ -86,7 +86,7 @@ def fetch_details(movie_id):
     data = requests.get(url, timeout=5).json()
 
     # This will format the year
-    release_year = data.get('release_date', '')
+    release_date = data.get('release_date', '')
     year = release_date.split('-')[0] if release_date else 'N/A'
 
     # This will format the runtime (e.g., 125 -> 2h 5m)
@@ -109,16 +109,16 @@ def fetch_details(movie_id):
       "runtime": runtime_str,
       "genres": genres
     }
-    except:
-      return {
-        "poster": "https://via.placeholder.com/500x750?text=No+Poster",
-        "backdrop": "https://via.placeholder.com/1280x720?text=No+Image",
-        "overview": "Information unavailable.",
-        "rating": "N/A",
-        "year": "N/A",
-        "runtime": "N/A",
-        "genres": []
-      }
+  except:
+    return {
+      "poster": "https://via.placeholder.com/500x750?text=No+Poster",
+      "backdrop": "https://via.placeholder.com/1280x720?text=No+Image",
+      "overview": "Information unavailable.",
+      "rating": "N/A",
+      "year": "N/A",
+      "runtime": "N/A",
+      "genres": []
+    }
 
 @st.dialog("")
 def show_details(movie_id, title):
@@ -130,7 +130,7 @@ def show_details(movie_id, title):
   st.markdown(f"""
     <style>
     /* This will pull the banner image up closer to the close button */
-    div[data-testid="stDialog"] div[data-testid=""stVerticalBlock] > div:first-child {{
+    div[data-testid="stDialog"] div[data-testid="stVerticalBlock"] > div:first-child {{
       margin-top: -1.5rem;
     }}
 
@@ -143,22 +143,100 @@ def show_details(movie_id, title):
 
     .hero-image {{
       height: 350px;
-      background-image: ('{details['backdrop']}');
+      background-image: url('{details['backdrop']}');
       background-size: cover;
       background-position: center top;
     }}
-    </style> /* CONTINUE FROM HERE */
-  """)
 
-  col1, col2 = st.columns([1, 2])
-  with col1:
-    st.image(details['poster'], use_container_width=True)
-  with col2:
-    st.write(f"### {title}")
-    st.write(f"⭐ **Rating:** {details['rating']}/10")
-    st.write(f"📅 **ID:** {movie_id}")
-    st.write("---")
-    st.write(details['overview'])
+    .hero-gradient {{
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 80%;
+      background: linear-gradient(to top, #262730 5%, transparent);
+    }}
+
+    .hero-title {{
+      position: absolute;
+      bottom: 15px;
+      left: 20px;
+      font-size: 3rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin: 0;
+      color: white;
+      line-height: 1.1;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+    }}
+
+    .badge-container {{
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }}
+
+    .badge {{
+      background-color: #444;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+    }}
+
+    .overview-text {{
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: #e5e5e5;
+      margin-bottom: 30px;
+    }}
+
+    div[data-testid="stDialog"] div[data-testid="stButton"] > button {{
+      background-color: #e50914 !important;
+      color: white !important;
+      border-radius: 5px !important;
+      width: 160px !important;
+      height: 45px !important;
+      border: none !important;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4) !important;
+    }}
+
+    div[data-testid="stDialog"] div[data-testid="stButton"] > button p {{
+      display: block !important;
+      font-size: 1.1rem !important;
+      font-weight: bold !important;
+      margin: 0 !important;
+    }}
+
+    div [data-testid="stDialog"] div[data-testid="stButton"] > button:hover {{
+      background-color: #f40612 !important;
+      transform: scale(1.05) !important;
+    }}
+    </style>
+
+    <div class="hero-banner">
+      <div class="hero-image"></div>
+      <div class="hero-gradient"></div>
+      <div class="hero-title">{title}</div>
+    </div>
+
+    <div class="badge-container">
+      <span class="badge">{details['year']}</span>
+      <span class="badge">⭐ {details['rating']}</span>
+      <span class="badge">{details['runtime']}</span>
+      {genres_html}
+    </div>
+
+    <div class="overview-text">
+      {details['overview']}
+    </div>
+  """, unsafe_allow_html=True)
+
+  # This will add the Netflix-liked button
+  if st.button("Get started ▶"):
+    st.toast(f"Starting {title}...", icon="🎬")
 
 def run_recommendation():
   if user_input:
