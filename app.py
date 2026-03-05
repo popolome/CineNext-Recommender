@@ -211,7 +211,7 @@ def show_details(movie_id, title):
       margin: 0 !important;
     }}
 
-    div [data-testid="stDialog"] div[data-testid="stButton"] > button:hover {{
+    div[data-testid="stDialog"] div[data-testid="stButton"] > button:hover {{
       background-color: #f40612 !important;
       transform: scale(1.05) !important;
     }}
@@ -242,78 +242,90 @@ def show_details(movie_id, title):
 
 def run_recommendation():
   if user_input:
-    with st.spinner('Thinking...'):
-      # This will check if the input matches a title
-      normalized_input = normalize(user_input)
-      match = movies[movies['title'].apply(normalize) == normalized_input]
+    # This will do the heavy AI search only if we typed something new, or clicked "Show More"
+    is_new_search = st.session_state.get('loaded_query') != user_input
+    is_new_limit = st.session_state.get('loaded_limit') != st.session_state.display_limit
 
-      if not match.empty:
-        # This will search using its tags to if title is found
-        query_text = match['tags'].values[0]
-        st.write(f"### Keeping the **{match['title'].values[0]}** vibe going with these picks:")
-      else:
-        # This will search using the raw description if title is not found
-        query_text = user_input
-        st.write(f"### We couldn't find that movie, but you might enjoy these similar titles:")
-
-      # This will query the ChromaDB
-      results = collection.query(
-        query_texts=[query_text],
-        n_results=st.session_state.display_limit
-      )
+    if is_new_search or is_new_limit or "movies_found" not in st.session_state:
       
-      st.divider()
+      with st.spinner('Thinking...'):
+        # This will check if the input matches a title
+        normalized_input = normalize(user_input)
+        match = movies[movies['title'].apply(normalize) == normalized_input]
+  
+        if not match.empty:
+          # This will search using its tags to if title is found
+          query_text = match['tags'].values[0]
+          st.session_state['header_text'] = f"### Keeping the **{match['title'].values[0]}** vibe going with these picks:"
+        else:
+          # This will search using the raw description if title is not found
+          query_text = user_input
+          st.session_state['header_text'] = f"### We couldn't find that movie, but you might enjoy these similar titles:"
+  
+        # This will query the ChromaDB
+        results = collection.query(
+          query_texts=[query_text],
+          n_results=st.session_state.display_limit
+        )
 
-      movies_found = results['metadatas'][0]
+        # This will save the results directly into Streamlit's memory so it will load fast
+        st.session_state['movies_found'] = results['metadatas'][0]
+        st.session_state['loaded_query'] = user_input
+        st.session_state['loaded_limit'] = st.session_state.display_limit
+
+    st.write(st.session_state['header_text'])
+    st.divider()
+
+    movies_found = st.session_state['movies_found']
 
       # This will loop thru the movies in chunks of 5
-      for i in range(0, len(movies_found), 5):
-        cols = st.columns(5)
-        batch = movies_found[i : i+5]
+    for i in range(0, len(movies_found), 5):
+      cols = st.columns(5)
+      batch = movies_found[i : i+5]
 
       # This will use the metadata id to get poster
-        for idx, res in enumerate(batch):
-          with cols[idx]:
-            # This will fetch all details at once, show the poster, and add the interactive popover
-            details = fetch_details(res['id'])
+      for idx, res in enumerate(batch):
+        with cols[idx]:
+          # This will fetch all details at once, show the poster, and add the interactive popover
+          details = fetch_details(res['id'])
 
-            st.markdown(f"""
-              <div id="movie_{res['id']}"></div>
-              <style>
-              /* This finds the wrapper containing the anchor, then targets the next button in the next wrapper */
-              div.element-container:has(#movie_{res['id']}) + div.element-container button {{
-                background-image: url('{details['poster']}');
-                background-size: cover;
-                background-position: center;
-                height: 350px;
-                width: 100% !important;
-                border-radius: 10px;
-                border: 2px solid transparent;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-                transition: transform 0.3s ease-in-out, border-color 0.3s ease-in-out;
-              }}
+          st.markdown(f"""
+            <div id="movie_{res['id']}"></div>
+            <style>
+            /* This finds the wrapper containing the anchor, then targets the next button in the next wrapper */
+            div.element-container:has(#movie_{res['id']}) + div.element-container button {{
+              background-image: url('{details['poster']}');
+              background-size: cover;
+              background-position: center;
+              height: 350px;
+              width: 100% !important;
+              border-radius: 10px;
+              border: 2px solid transparent;
+              box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+              transition: transform 0.3s ease-in-out, border-color 0.3s ease-in-out;
+            }}
 
-              /* This is the hover state */
-              div.element-container:has(#movie_{res['id']}) + div.element-container button:hover {{
-                transform: scale(1.05);
-                border-color: #e50914;
-                z-index: 10;
-              }}
-              </style>
-            """, unsafe_allow_html=True)
+            /* This is the hover state */
+            div.element-container:has(#movie_{res['id']}) + div.element-container button:hover {{
+              transform: scale(1.05);
+              border-color: #e50914;
+              z-index: 10;
+            }}
+            </style>
+          """, unsafe_allow_html=True)
 
-            # This button will mimic clicking the poster
-            if st.button(" ", key=f"btn_{res['id']}", use_container_width=True):
-              show_details(res['id'], res['title'])
+          # This button will mimic clicking the poster
+          if st.button(" ", key=f"btn_{res['id']}", use_container_width=True):
+            show_details(res['id'], res['title'])
 
-            # This will show the title below the poster
-            st.caption(f"**{res['title']}**")
+          # This will show the title below the poster
+          st.caption(f"**{res['title']}**")
 
-      if len(movies_found) >= st.session_state.display_limit and st.session_state.display_limit < 50:
-        st.divider()
-        if st.button("Show More Results ⬇️", key="show_more_btn", use_container_width=True):
-          st.session_state.display_limit += 10
-          st.rerun()
+    if len(movies_found) >= st.session_state.display_limit and st.session_state.display_limit < 50:
+      st.divider()
+      if st.button("Show More Results ⬇️", key="show_more_btn", use_container_width=True):
+        st.session_state.display_limit += 10
+        st.rerun()
       
   else:
     st.warning(f"Please enter something first!")
