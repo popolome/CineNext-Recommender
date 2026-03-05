@@ -220,8 +220,9 @@ def show_details(movie_id, title):
     </div>
   """, unsafe_allow_html=True)
 
-  if details['trailer_key']:
-    st.videos(f"https://www.youtube.com/watch?v={details['trailer_key']}")
+  trailer = details.get('trailer_key')
+  if trailer:
+    st.video(f"https://www.youtube.com/watch?v={trailer}")
 
   # This will add the Netflix-liked button
   if st.button("Get started ▶"):
