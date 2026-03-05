@@ -82,7 +82,7 @@ def fetch_details(movie_id):
     trailer_key = None
     videos = data.get('videos', {}).get('results', [])
     for vid in videos:
-      if vid.get('site') == 'Youtube' and vid.get('type') == 'Trailer':
+      if vid.get('site') == 'YouTube' and vid.get('type') == 'Trailer':
         trailer_key = vid.get('key')
         break
     
