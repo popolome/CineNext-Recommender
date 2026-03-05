@@ -16,29 +16,6 @@ st.markdown("""
  .stApp {
    background-color: #0e1117;
  }
- /* This will re-style the default button's looks */
- div[data-testid="stButton"] > button {
-   border: none;
-   padding: 0;
-   background-color: transparent;
-   border-radius: 10px;
-   transition: transform 0.3s ease-in-out;
-   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-   overflow: hidden;
-   display: block;
-   width: 100%;
- }
- /* This is the hover effect with zoom, cursor becomes pointer */
- div[data-testid="stButton"] > button:hover {
-   transform: scale(1.05);
-   background-color: transparent;
-   border: 2px solid #e50914;
-   cursor: pointer;
- }
-  /* This hides the button */
-  div[data-testid="stButton"] > button p {
-    display: none; 
-  }
   </style>
 """, unsafe_allow_html=True)
 
