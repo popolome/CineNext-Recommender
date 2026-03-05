@@ -78,6 +78,7 @@ if 'search_active' not in st.session_state:
 def normalize(text):
   return re.sub(r'[^a-zA-Z0-9]', '', str(text)).lower()
 
+@st.cache_data(ttl=86400)
 def fetch_details(movie_id):
   # This keeps the API key hidden
   api_key = st.secrets["TMDB_API_KEY"]
@@ -237,6 +238,7 @@ def show_details(movie_id, title):
   # This will add the Netflix-liked button
   if st.button("Get started ▶"):
     st.toast(f"Starting {title}...", icon="🎬")
+    st.toast(f"This is a test, no video will appear.")
 
 def run_recommendation():
   if user_input:
