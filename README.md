@@ -6,7 +6,7 @@ https://cinenext-recommender.streamlit.app/
 
 <br>
 
-Search for Korean movies and the AI will search using Vectorization using ChromeDB on the most similar meaning to the word 'Korean'.
+Search for Korean movies and the AI will search using Vectorization using ChromaDB on the most similar meaning to the word 'Korean'.
 <img width="1920" height="994" alt="image" src="https://github.com/user-attachments/assets/0e2a0241-00a7-41e6-a613-273f03f7f22f" />
 
 <br>
