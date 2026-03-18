@@ -75,3 +75,28 @@ If you want to run this project on your own machine, follow these steps:
 
 ## 📄 License
 This project is licensed under the [MIT License](https://www.google.com/search?q=MIT-LICENSE).
+
+---
+
+## 📝 Key Notes from Me:
+
+- I have always wanted to create a movie website that recommends movies to people based on their search.
+- This is to me, a rather simple kind of movie recommender, like Netflix.
+- However, the real complexities not in it are the member accounts and learning to to recommend based on each user's search history.
+- I will create the real complexities soon in the future, but for now, I like to take the win of creating a simple recommendation engine.
+- I have re-used my knowledge of ChromaDB, NLP, Vector Search, and Streamlit into this project.
+- What I have learned are how vector searching can also be applied to recommendation engine and the search bar.
+- It searches so fast and it is mostly accurate.
+- If this is a real company project, I will enhance it to handle trailers, membership, and probably a feedback function or maybe even a RAG chatbot if needed.
+- Time to seek out new AI ideas to create my new portfolio project.
+- This is a portfolio for my Data Scientist dream.
+
+<br>
+
+That's all from me.
+
+<br>
+
+Yours Truly,
+
+Jun Kit Mak
