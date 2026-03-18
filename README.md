@@ -82,7 +82,7 @@ This project is licensed under the [MIT License](https://www.google.com/search?q
 
 - I have always wanted to create a movie website that recommends movies to people based on their search.
 - This is to me, a rather simple kind of movie recommender, like Netflix.
-- However, the real complexities not in it are the member accounts and learning to to recommend based on each user's search history.
+- However, the real complexities not in it are the member accounts and learning to recommend based on each user's search history.
 - I will create the real complexities soon in the future, but for now, I like to take the win of creating a simple recommendation engine.
 - I have re-used my knowledge of ChromaDB, NLP, Vector Search, and Streamlit into this project.
 - What I have learned are how vector searching can also be applied to recommendation engine and the search bar.
