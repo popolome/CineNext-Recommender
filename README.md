@@ -1,4 +1,6 @@
 # CineNext-Recommender 🎬
+![CineNext](https://github.com/user-attachments/assets/5c8a37f2-d166-4dce-bc80-be8dc7512cef)
+
 
 Moving beyond generative AI to explore deterministic recommendation engines using Cosine Similarity and Vectorization.
 
