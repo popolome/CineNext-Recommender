@@ -10,6 +10,18 @@ Moving beyond generative AI to explore deterministic recommendation engines usin
 
 Search for specific genres, vibes, or movie titles. The engine uses vectorization via ChromaDB to find the closest semantic matches to your query.
 
+![CineNext_1](https://github.com/user-attachments/assets/aaef36f4-6265-4d05-9959-3556b60d5512)
+
+<br>
+
+![CineNext_2](https://github.com/user-attachments/assets/889deacf-7470-4e41-9ddc-8ed8f31fd2e3)
+
+<br>
+
+![CineNext_3](https://github.com/user-attachments/assets/ef059667-14d0-477c-bc9e-b02155df038a)
+
+<br>
+
 ### Examples in Action
 
 **1. Semantic Search:** Search for "Korean" movies, and the AI searches for the most similar meaning to the word 'Korean' using vectorization.
